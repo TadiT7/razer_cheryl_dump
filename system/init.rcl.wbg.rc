@@ -1,0 +1,12 @@
+# WBG Bluetooth
+on boot
+    setprop persist.sys.wbg.bt.service false
+    setprop persist.sys.wbg.bt btstop
+
+service wbg_service /system/bin/sh /system/etc/wbg_bt.sh
+    user root
+    disabled
+    oneshot
+
+on property:persist.sys.wbg.bt.service=true
+    start wbg_service

@@ -1,0 +1,268 @@
+on init
+    # do not output log to UART console
+    write /proc/sys/kernel/printk 0 0 0 0
+	
+	# Ernest@SW7 for RCL project
+	chmod 6755 /system/bin/tcpdump_FIH.pre
+	cp -f /system/bin/tcpdump_FIH.pre ./system/bin/tcpdump_FIH
+	
+on post-fs-data
+    # SW2-5-1-MP-DbgCfgTool-00*[
+    mkdir /data/misc 01775 system misc
+    # SW2-5-1-MP-DbgCfgTool-00*]
+
+    #SW2-5-1-MP-DbgCfgTool-00+[
+    chmod 0664 /dev/dbgcfgtool
+    mkdir /data/efslog 0775 system system
+    mkdir /data/efslog/err 0775 system system
+    mkdir /data/efslog/OEMDBG_LOG 0775 system system
+    mkdir /data/efslog/qxdm 0775 system system
+    mkdir /data/logs/ 0775 system system
+    mkdir /data/last_kmsg 0775 system system
+    mkdir /data/last_alog 0775 system system
+    #SW2-5-1-MP-DbgCfgTool-00+]
+
+    mkdir /data/cda 0777 system system
+
+    mkdir /data/system/theme 0775 system system
+
+    #to enable DbgCfgTool logging mechanism by default at FTM AOS
+    chown system system /data/data/com.evenwell.DbgCfgTool/files/DefaultDbgConfig.xml
+    chown system system /data/data/com.evenwell.DbgCfgTool/files/dynamic_log_ctrl_default.xml
+    chown system system /data/data/com.evenwell.DbgCfgTool/files/fihop.sh
+    chown system system /data/data/com.evenwell.DbgCfgTool/files/LogConfig
+    chown system system /data/data/com.evenwell.DbgCfgTool/files/ver
+    chown system system /data/data/com.evenwell.DbgCfgTool/files/cpfile
+    chown system system /data/data/com.evenwell.DbgCfgTool/files/DCTTable_MTK.xml
+    chown system system /data/data/com.evenwell.DbgCfgTool/files/DCTTable_QC.xml
+
+    chmod 0660 /data/data/com.evenwell.DbgCfgTool/files/DefaultDbgConfig.xml
+    chmod 0660 /data/data/com.evenwell.DbgCfgTool/files/dynamic_log_ctrl_default.xml
+    chmod 0660 /data/data/com.evenwell.DbgCfgTool/files/fihop.sh
+    chmod 0600 /data/data/com.evenwell.DbgCfgTool/files/LogConfig
+    chmod 0600 /data/data/com.evenwell.DbgCfgTool/files/ver
+    chmod 0777 /data/data/com.evenwell.DbgCfgTool/files/cpfile
+    chmod 0660 /data/data/com.evenwell.DbgCfgTool/files/DCTTable_MTK.xml
+    chmod 0660 /data/data/com.evenwell.DbgCfgTool/files/DCTTable_QC.xml
+    
+    start loggerlauncher
+
+#start log lately to shorten boot time
+#on boot
+on nonencrypted
+    # FIH, HenryMCWang, 2010/08/17, +++
+    # Set /dev/kmsg & /proc/mlog user/group to system
+    chown system system /dev/kmsg
+    chown system system /proc/mlog
+    # FIH, HenryMCWang, 2010/08/17, +++
+
+    #FIH, Kany ,2012/08/22 klogd, +++
+    mkdir /data/logs/ 0775 system system
+    start loggerlauncher
+    chmod 0777 /system/bin/cplog
+
+    #chmod 0777 /system/etc/execute-klogd
+    start mlog
+    #start exklogd
+    #FIH, Kany ,2012/08/22 klogd, +++
+
+#SW2-5-1-MP-DbgCfgToolTool-00+ Add 'loggerlauncher' socket
+service loggerlauncher /system/bin/loggerlauncher_Qualcomm
+#    class_start late_start
+    user system
+    group system
+    oneshot
+    socket loggerlauncher stream 666 system system
+
+# Logcat Kill For Encrypt 2013.12.04 DanielPYLiao
+# ==========================================
+on property:vold.decrypt=trigger_shutdown_framework
+    start logcatkill
+
+service logcatkill /system/bin/logcat_kill
+    user system
+    group system
+    oneshot
+# ==========================================
+# Logcat Kill For Encrypt 2013.12.04 DanielPYLiao
+
+# FIHTDC, Div2-SW2-BSP HenryMCWang, pmlog
+service logfile /system/bin/logfile -b -f /data/pmlog.log
+    user system
+    group system
+    oneshot
+# FIHTDC, Div2-SW2-BSP HenryMCWang, pmlog
+
+# FIHTDC, Div2-SW2-BSP HenryMCWang, mlog
+service mlog /system/bin/mlog
+    user system
+    group system
+    disabled
+    oneshot
+# FIHTDC, Div2-SW2-BSP HenryMCWang, mlog
+
+# FIHTDC, KevinChen 20120517 for debug
+service FIHDumpInfo /system/bin/FIHDumpInfo
+    group system
+    oneshot
+    disabled
+
+on property:persist.sys.fih_sysinfodump=FIHDumpInfo
+	start FIHDumpInfo
+
+on property:persist.sys.fih_sysinfodump=restart_fih_logging
+	start loggerlauncher
+# FIHTDC, KevinChen 20120517 for debug
+
+# FIHTDC, KevinChen 20130124 for running tcpdump begin
+service tcpdump /system/bin/sh /system/etc/tcpdump_FIH.sh
+    user root
+	oneshot
+	disabled
+
+on property:persist.sys.fihop=9
+	start tcpdump
+# FIHTDC, KevinChen 20130124 for running tcpdump end
+
+# FIHTDC, KevinChen 20130124 for replacing runit service begin
+service fihop /system/bin/sh /system/etc/fihop.sh
+        user root
+	oneshot
+	disabled
+
+on property:persist.sys.fihop=1
+	start fihop
+
+on property:persist.sys.fihop=2
+	start fihop
+
+on property:persist.sys.fihop=3
+	start fihop
+
+on property:persist.sys.fihop=4
+	start fihop
+
+on property:persist.sys.fihop=5
+	start fihop
+
+on property:persist.sys.fihop=6
+	start fihop
+
+on property:persist.sys.fihop=7
+	start fihop
+
+on property:persist.sys.fihop=8
+	start fihop
+#FIHTDC, KevinChen 20130124 for replacing runit service end
+
+# FIHTDC, KevinChen 20130507 for write poweron cause and trigger mlog begin
+service dbgWriteCause /system/bin/sh /system/etc/write_abnromal_cause.sh
+    user root
+    oneshot
+    disabled
+# FIHTDC, KevinChen 20130507 for write poweron cause and trigger mlog end
+
+#FIH, Kany ,2012/08/22 klogd, +++
+#service exklogd /system/bin/sh /system/etc/execute-klogd.sh
+#    user root
+#    group root
+#    disabled
+#    oneshot
+#FIH, Kany ,2012/08/22 klogd, +++
+
+
+# fihtdc@20161208 AlanChiu add fxtzlogd
+# fxtzlogd utility : to retrieve tz logs to android log system
+service fxtzlogd /system/bin/fxtzlogd
+    class late_start
+    user system
+    group system
+
+# bugreport is triggered by holding down volume down, volume up and power
+service bugreport /system/bin/dumpstate -d -p -B -z \
+        -o  /data/user_de/0/com.android.shell/files/bugreports/bugreport
+    class main
+    disabled
+    oneshot
+    keycodes 114 115 116
+
+#atrace-log
+service atrace-log /system/bin/atrace-log.sh
+        class main
+        disabled
+        oneshot
+        keycodes 115 116
+
+#black box system begin
+service bbsys_bc /system/bin/bbsbc
+    class main
+    disabled
+    oneshot
+
+service bbsys /system/bin/pandoraservice
+        class bbsys
+        user system
+        oneshot
+        group system media_rw sdcard_rw
+        socket bbsys stream 666 system system
+
+on fs
+        mkdir /BBSYS 0770 system system
+        mount ext4 /dev/block/bootdevice/by-name/box /BBSYS nosuid nodev barrier=1
+        chown system system /BBSYS
+        chmod 0770 /BBSYS
+        chmod 0660 /dev/fih
+        chown root system /dev/fih
+        restorecon_recursive /BBSYS
+
+on property:persist.sys.bbsys=on
+        start bbsys
+
+on property:persist.sys.bbsys=off
+        stop bbsys
+
+on property:persist.sys.bbsys=restart
+        stop bbsys
+        setprop persist.sys.bbsys on
+
+on property:sys.bbsys.bc=*
+        start bbsys_bc
+#black box system end
+
+# {{ [VN2-414] AnitaYLLin, FihDataLog Tool
+service data-log /system/bin/sh /system/etc/datalogtool.sh
+        user root
+        oneshot
+        disabled
+## debug apk use 0~9 value
+## data-tool apk use 10~11 value
+## 10:start tcpdump script
+## 11:modify tcpdump authority to move to SD card
+on property:persist.sys.fihop=10
+        start data-log
+on property:persist.sys.fihop=11
+        chown system system /data/datalog/tcpdump.pcap
+# }} [VN2-414]
+
+# 20140220 DbgCfgTool SYSAPP-143 - Shih-Meng Teng, Begin
+#service cpyFile2iSD /data/data/com.fihtdc.DbgCfgTool/files/cpfile /storage/sdcard0/
+service cpyFile2iSD /system/bin/cpfile /storage/sdcard0/
+#        user root
+        class main
+        oneshot
+        disabled
+#        seclabel u:r:cpyFile2iSD_exec:s0
+
+#service cpyFile2eSD /data/data/com.fihtdc.DbgCfgTool/files/cpfile /storage/sdcard1/
+service cpyFile2eSD /system/bin/cpfile /storage/sdcard1/
+#        user root
+        class main
+        oneshot
+        disabled
+#        seclabel u:r:cpyFile2iSD_exec:s0
+
+# 20140220 DbgCfgTool SYSAPP-143 - Shih-Meng Teng, End
+
+
+
+

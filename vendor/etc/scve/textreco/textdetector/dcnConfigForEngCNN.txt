@@ -1,0 +1,81 @@
+CPU = 4
+GPU = 0
+DSP = 0
+// configuration for Caffe 5 layer DCN
+// preprocessing parameter
+Image Type = GRAY
+Transpose Input Image = 0
+PreprocessingType = MEAN_VAR
+ImageMean = 0
+ImageVar = 1.0
+// input image size
+ImageWidth = 24
+ImageHeight = 24
+NumChannel = 1
+PaddingSize = 0
+WidthAlignSize = 1
+HeightAlignSize = 1
+// start of each layer
+// 1 Layer : convolution layer
+LayerType = CONVOLUTION
+KernelSize = 7
+KernelStride = 7
+KernelChannel = 1
+NumKernels = 3
+ConvolutionStep = 1
+NumGroup = 1
+// output of convolution Layer 1
+NewOutputLayer = 1
+paddingSz = 0
+WidthAlignSize = 1
+HeightAlignSize = 1
+// 2 Layer : convolution layer
+LayerType = CONVOLUTION
+KernelSize = 5
+KernelStride = 5
+KernelChannel = 3
+NumKernels = 6
+ConvolutionStep = 1
+NumGroup = 1
+// output of convolution Layer 2
+NewOutputLayer = 1
+paddingSz = 0
+WidthAlignSize = 1
+HeightAlignSize = 1
+// 3 Layer : RELU maxpooling layer
+LayerType = RELU_MAXPOOLING
+PoolingSize = 2
+PoolingStep = 2
+RELUThreshold = 0.0
+// Output of relu maxpooling layer 3
+NewOutputLayer = 1
+paddingSz = 0
+WidthAlignSize = 1
+HeightAlignSize = 1
+// 4 Layer : convolution layer
+LayerType = CONVOLUTION
+KernelSize = 7
+KernelStride = 7
+KernelChannel = 6
+NumKernels = 32
+ConvolutionStep = 1
+NumGroup = 1
+// output of convolution Layer 4
+NewOutputLayer = 1
+paddingSz = 0
+WidthAlignSize = 1
+HeightAlignSize = 1
+// 5 Layer : RELU layer
+LayerType = RELU
+RELUThreshold = 0.0
+// Output of relu layer 5
+NewOutputLayer = 0
+// 7 Layer : Linear layer
+LayerType = LINEAR
+KernelWidth = 32
+NumKernels = 2
+// output of linear layer 7
+NewOutputLayer = 1
+paddingSz = 0
+WidthAlignSize = 1
+HeightAlignSize = 1

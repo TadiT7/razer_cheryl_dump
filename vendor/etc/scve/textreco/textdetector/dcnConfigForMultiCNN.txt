@@ -1,0 +1,123 @@
+CPU = 4
+GPU = 0
+DSP = 0
+// configuration for Caffe 5 layer DCN
+// preprocessing parameter
+Image Type = GRAY
+Transpose Input Image = 0
+PreprocessingType = MEAN_VAR
+ImageMean = 0
+ImageVar = 1.0
+// input image size
+ImageWidth = 32
+ImageHeight = 32
+NumChannel = 1
+PaddingSize = 0
+WidthAlignSize = 1
+HeightAlignSize = 1
+// start of each layer
+// 1 Layer : convolution layer
+LayerType = CONVOLUTION
+KernelSize = 7
+KernelStride = 7
+KernelChannel = 1
+NumKernels = 6
+ConvolutionStep = 1
+NumGroup = 1
+// output of convolution Layer 1
+NewOutputLayer = 1
+paddingSz = 0
+WidthAlignSize = 1
+HeightAlignSize = 1
+// 2 Layer : RELU layer
+LayerType = RELU
+RELUThreshold = 0.0
+// Output of relu layer 2
+NewOutputLayer = 0
+// 3 Layer : convolution layer
+LayerType = CONVOLUTION
+KernelSize = 7
+KernelStride = 7
+KernelChannel = 6
+NumKernels = 12
+ConvolutionStep = 1
+NumGroup = 1
+// output of convolution Layer 3
+NewOutputLayer = 1
+paddingSz = 0
+WidthAlignSize = 1
+HeightAlignSize = 1
+// 4 Layer : RELU layer
+LayerType = RELU
+RELUThreshold = 0.0
+// Output of relu layer 4
+NewOutputLayer = 0
+// 5 Layer : convolution layer
+LayerType = CONVOLUTION
+KernelSize = 7
+KernelStride = 7
+KernelChannel = 12
+NumKernels = 12
+ConvolutionStep = 1
+NumGroup = 1
+// output of convolution Layer 5
+NewOutputLayer = 1
+paddingSz = 0
+WidthAlignSize = 1
+HeightAlignSize = 1
+// 6 Layer : RELU maxpooling layer
+LayerType = RELU_MAXPOOLING
+PoolingSize = 2
+PoolingStep = 2
+RELUThreshold = 0.0
+// Output of relu maxpooling layer 6
+NewOutputLayer = 1
+paddingSz = 0
+WidthAlignSize = 1
+HeightAlignSize = 1
+// 8 Layer : convolution layer
+LayerType = CONVOLUTION
+KernelSize = 7
+KernelStride = 7
+KernelChannel = 12
+NumKernels = 12
+ConvolutionStep = 1
+NumGroup = 1
+// output of convolution Layer 8
+NewOutputLayer = 1
+paddingSz = 0
+WidthAlignSize = 1
+HeightAlignSize = 1
+// 9 Layer : RELU layer
+LayerType = RELU
+RELUThreshold = 0.0
+// Output of relu layer 9
+NewOutputLayer = 0
+// 10 Layer : Linear layer
+LayerType = LINEAR
+KernelWidth = 12
+NumKernels = 48
+// output of linear layer 10
+NewOutputLayer = 1
+paddingSz = 0
+WidthAlignSize = 1
+HeightAlignSize = 1
+// 11 Layer : RELU layer
+LayerType = RELU
+RELUThreshold = 0.0
+// Output of relu layer 11
+NewOutputLayer = 0
+// 12 Layer : Linear layer
+LayerType = LINEAR
+KernelWidth = 48
+NumKernels = 2
+// output of linear layer 12
+NewOutputLayer = 1
+paddingSz = 0
+WidthAlignSize = 1
+HeightAlignSize = 1
+// 13 Layer : RELU layer
+LayerType = RELU
+RELUThreshold = 0.0
+// Output of relu layer 13
+NewOutputLayer = 0

@@ -1,0 +1,28 @@
+import /init.cheryl_ckh.rc
+import /init.rcl.smartamp.rc
+import /init.fih.fqcaudio.rc
+import /init.rcl.wbg.rc
+import /init.rcl.led.rc
+import /init.rcl.touch.rc
+import /init.qcom.ramdump.rc
+import /init.rcl.sd.rc
+import /init.rcl.lcm.rc
+import /init.qcom.diagtest.rc
+import /init.rcl.battery.rc
+import /init.rcl.poweroff_charging.rc
+import /init.rcl.fingerprint.rc
+import /init.rcl.nfc.rc
+import /init.rcl.theme.rc
+
+## < FIH_SW7@ErnestSheu-20174001, Add for log.
+import /init.qcom.log.rc
+## > FIH_SW7@ErnestSheu-20174001
+
+service wbgtesttool_wifi /system/bin/sh /system/etc/wbg_wifi.sh
+    user root
+    disabled
+    oneshot
+
+on property:persist.sys.wbg.wifi=start
+    start wbgtesttool_wifi
+
