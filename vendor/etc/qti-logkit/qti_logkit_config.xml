@@ -58,18 +58,24 @@ Confidential and Proprietary - Qualcomm Technologies, Inc.
          Visible: "true" to display in UI
          Enable: default enable state
          Userdebug: "true" if element should be greyed out on USER builds
+
+      UIElementQDSS:
+         Name: Name to display
+         Visible: "true" to display in UI
+         Enable: default enable state
+         Userdebug: "true" if element should be greyed out on USER builds
    -->
    <ConfigureLogs>
       <Submenu Name="Modem" Enable="true">
          <UIElementDMC
             Name="Golden"
-            Path="/system/vendor/etc/qti-logkit/goldenlogmask.dmc"
+            Path="/vendor/etc/qti-logkit/goldenlogmask.dmc"
             Visible="true"
             Enable="true"
             Userdebug="true"/>
          <UIElementDMC
             Name="Audio"
-            Path="/system/vendor/etc/qti-logkit/audiobasic.dmc"
+            Path="/vendor/etc/qti-logkit/audiobasic.dmc"
             Visible="true"
             Enable="false"
             Userdebug="true"/>
@@ -77,7 +83,7 @@ Confidential and Proprietary - Qualcomm Technologies, Inc.
          <!-- This switch is hidden and only enabled in scenario view -->
          <UIElementSecondaryDMC
             Name="IMS"
-            Path="/system/vendor/etc/qti-logkit/IMS.dmc"
+            Path="/vendor/etc/qti-logkit/IMS.dmc"
             Visible="false"
             Enable="false"
             Userdebug="true"/>
@@ -85,7 +91,7 @@ Confidential and Proprietary - Qualcomm Technologies, Inc.
          <!-- This swith is used to selecte a new DMC file -->
           <UIElementCustomDMCPath
             Name="Custom"
-            Path="/data/misc/qti-logkit/shared-public"
+            Path="/data/vendor/qti-logkit/shared-public"
             Visible="true"
             Enable="false"
             Userdebug="true"/>
@@ -134,6 +140,12 @@ Confidential and Proprietary - Qualcomm Technologies, Inc.
             CommandName="eHLOSCommand_ContBluetooth"
             Visible="true"
             Enable="false"/>
+
+         <UIElementQDSS
+            Name="QDSS"
+            Visible="true"
+            Enable="false"
+            Userdebug="true"/>
       </Submenu>
    </ConfigureLogs>
 
@@ -156,19 +168,19 @@ Confidential and Proprietary - Qualcomm Technologies, Inc.
    <ConfigureScenarios>
       <Scenario
          Name="Default"
-         Icon="/system/vendor/etc/qti-logkit/scenarios/default.png"
+         Icon="/vendor/etc/qti-logkit/scenarios/default.png"
          Selected="true">
          <Item Submenu="Modem" Name="Golden"/>
       </Scenario>
       <Scenario
          Name="Bluetooth"
-         Icon="/system/vendor/etc/qti-logkit/scenarios/bluetooth.png">
+         Icon="/vendor/etc/qti-logkit/scenarios/bluetooth.png">
          <Item Submenu="Modem" Name="Golden"/>
          <Item Submenu="Android" Name="Bluetooth"/>
       </Scenario>
       <Scenario
          Name="IMS"
-         Icon="/system/vendor/etc/qti-logkit/scenarios/IMS.png">
+         Icon="/vendor/etc/qti-logkit/scenarios/IMS.png">
          <Item Submenu="Modem" Name="IMS"/>
       </Scenario>
    </ConfigureScenarios>
@@ -333,7 +345,7 @@ Confidential and Proprietary - Qualcomm Technologies, Inc.
       <StorageLocation>
          <Storage
             Name="internal"
-            Path="/data/misc/qti-logkit/logdata/"
+            Path="/data/user/0/com.qualcomm.qti.logkit/files/"
             LowStorageWarning="300"
             Selected="true"/>
          <Storage

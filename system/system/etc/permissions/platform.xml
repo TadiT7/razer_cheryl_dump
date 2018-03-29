@@ -43,8 +43,9 @@
     </permission>
 
     <permission name="android.permission.BLUETOOTH_STACK" >
-        <group gid="net_bt_stack" />
+        <group gid="bluetooth" />
         <group gid="wakelock" />
+        <group gid="uhid" />
     </permission>
 
     <permission name="android.permission.NET_TUNNELING" >
@@ -92,7 +93,7 @@
     </permission>
 
     <!-- Group that can modify how network statistics are accounted -->
-    <permission name="android.permission.MODIFY_NETWORK_ACCOUNTING">
+    <permission name="android.permission.UPDATE_DEVICE_STATS">
         <group gid="net_bw_acct" />
     </permission>
 
@@ -106,7 +107,7 @@
         <group gid="audio" />
     </permission>
 
-    <permission name="android.permission.ACCESS_FM_RADIO" >
+    <permission name="android.permission.ACCESS_BROADCAST_RADIO" >
         <!-- /dev/fm is gid media, not audio -->
         <group gid="media" />
     </permission>
@@ -155,12 +156,15 @@
     <assign-permission name="android.permission.WAKE_LOCK" uid="cameraserver" />
     <assign-permission name="android.permission.UPDATE_DEVICE_STATS" uid="cameraserver" />
     <assign-permission name="android.permission.UPDATE_APP_OPS_STATS" uid="cameraserver" />
+    <assign-permission name="android.permission.GET_PROCESS_STATE_AND_OOM_SCORE" uid="cameraserver" />
 
     <assign-permission name="android.permission.ACCESS_SURFACE_FLINGER" uid="graphics" />
 
     <!-- This is a list of all the libraries available for application
          code to link against. -->
 
+    <library name="android.test.mock"
+            file="/system/framework/android.test.mock.jar" />
     <library name="android.test.runner"
             file="/system/framework/android.test.runner.jar" />
     <library name="javax.obex"
@@ -175,6 +179,10 @@
     <!-- These are the standard packages that are white-listed to always have internet
          access while in data mode, even if they aren't in the foreground. -->
     <allow-in-data-usage-save package="com.android.providers.downloads" />
+
+    <!-- This is a core platform component that needs to freely run in the background -->
+    <allow-in-power-save package="com.android.cellbroadcastreceiver" />
+    <allow-in-power-save package="com.android.shell" />
 
     <!-- These are the packages that are white-listed to be able to run as system user -->
     <system-user-whitelisted-app package="com.android.settings" />
