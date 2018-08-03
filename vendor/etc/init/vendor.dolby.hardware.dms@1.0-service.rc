@@ -1,0 +1,4 @@
+service dms-hal-1-0 /vendor/bin/hw/vendor.dolby.hardware.dms@1.0-service
+    class late_start
+    user media
+    group audio media
